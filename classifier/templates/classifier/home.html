@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Skin Disease Classifier - SkinScan</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    /* Trendy pastel fashion palette */
+    :root {
+      --pink: #f9c6c9;
+      --lavender: #c9a9ff;
+      --mint: #a1f0d1;
+      --gold: #ffd369;
+      --dark-text: #3b2e5a;
+      --light-bg: #fff8fb;
+      --shadow-color: rgba(194, 148, 255, 0.35);
+    }
+
+    body {
+      background: var(--light-bg);
+      color: var(--dark-text);
+      font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* Navbar */
+    nav.navbar {
+      background: linear-gradient(90deg, var(--pink), var(--lavender));
+      box-shadow: 0 6px 20px var(--shadow-color);
+      font-weight: 600;
+      letter-spacing: 0.6px;
+    }
+
+    nav.navbar .navbar-brand {
+      font-size: 1.9rem;
+      color: white;
+      font-weight: 900;
+      letter-spacing: 3px;
+      text-shadow: 1px 1px 6px rgba(0,0,0,0.15);
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+    nav.navbar .navbar-brand:hover {
+      color: var(--gold);
+      text-shadow: 1px 1px 8px rgba(255, 211, 105, 0.8);
+    }
+
+    nav.navbar .nav-link {
+      color: white;
+      position: relative;
+      transition: color 0.3s ease;
+      padding: 0.5rem 1rem;
+    }
+    nav.navbar .nav-link:hover,
+    nav.navbar .nav-link.active {
+      color: var(--gold);
+    }
+    /* Animated underline */
+    nav.navbar .nav-link::after {
+      content: "";
+      position: absolute;
+      width: 0;
+      height: 2px;
+      background: var(--gold);
+      left: 0;
+      bottom: 0;
+      transition: width 0.3s ease;
+      border-radius: 2px;
+    }
+    nav.navbar .nav-link:hover::after,
+    nav.navbar .nav-link.active::after {
+      width: 100%;
+    }
+
+    /* Main container */
+    .container-main {
+      flex-grow: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 4rem 1rem 6rem;
+    }
+
+    .card-upload {
+      background: white;
+      border-radius: 25px;
+      max-width: 480px;
+      width: 100%;
+      padding: 3rem 3rem 3.5rem;
+      box-shadow: 0 12px 35px var(--shadow-color);
+      text-align: center;
+      transition: transform 0.35s ease, box-shadow 0.35s ease;
+    }
+    .card-upload:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 25px 55px var(--shadow-color);
+    }
+
+    h2.title {
+      font-weight: 900;
+      font-size: 2.7rem;
+      margin-bottom: 0.3rem;
+      background: linear-gradient(45deg, var(--pink), var(--lavender));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 3px;
+      user-select: none;
+    }
+
+    p.welcome-msg {
+      font-size: 1.2rem;
+      margin-bottom: 2.8rem;
+      font-style: italic;
+      color: #7e6b95;
+    }
+
+    /* Custom file input styling */
+    label.custom-file-label {
+      display: inline-block;
+      width: 100%;
+      padding: 1.1rem 1.5rem;
+      border: 3px dashed var(--mint);
+      border-radius: 60px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--mint);
+      cursor: pointer;
+      transition: background-color 0.4s ease, color 0.4s ease, box-shadow 0.4s ease;
+      box-shadow: 0 8px 20px rgba(161, 240, 209, 0.35);
+      user-select: none;
+      margin-bottom: 2rem;
+    }
+    label.custom-file-label:hover {
+      background-color: var(--mint);
+      color: white;
+      box-shadow: 0 12px 40px rgba(161, 240, 209, 0.6);
+    }
+
+    /* Hide actual file input */
+    input[type="file"] {
+      display: none;
+    }
+
+    /* Submit button */
+    button.btn-predict {
+      background: linear-gradient(45deg, var(--pink), var(--lavender));
+      border: none;
+      color: white;
+      font-weight: 800;
+      font-size: 1.35rem;
+      padding: 0.95rem 0;
+      width: 100%;
+      border-radius: 50px;
+      box-shadow: 0 10px 30px var(--shadow-color);
+      transition: background 0.4s ease, box-shadow 0.4s ease;
+    }
+    button.btn-predict:hover {
+      background: var(--gold);
+      color: var(--dark-text);
+      box-shadow: 0 14px 40px rgba(255, 211, 105, 0.75);
+    }
+
+    /* Footer */
+    footer.footer {
+      background: var(--lavender);
+      color: white;
+      padding: 1.3rem 1rem;
+      text-align: center;
+      font-weight: 600;
+      font-size: 0.95rem;
+      box-shadow: 0 -4px 18px var(--shadow-color);
+      user-select: none;
+      margin-top: auto;
+    }
+    footer.footer a {
+      color: var(--gold);
+      text-decoration: none;
+      font-weight: 700;
+      transition: color 0.3s ease;
+    }
+    footer.footer a:hover {
+      color: #f7d178;
+      text-decoration: underline;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 480px) {
+      .card-upload {
+        padding: 2.5rem 2rem 3rem;
+      }
+      h2.title {
+        font-size: 2.2rem;
+      }
+      p.welcome-msg {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-md">
+    <div class="container">
+      <a class="navbar-brand" href="#">SkinScan</a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon" style="filter: invert(1)"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav fs-5 align-items-center">
+          <li class="nav-item">
+            <a class="nav-link active" href="#">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#how-it-works">How it Works</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#tips-section">Tips</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#contact-section">Contact</a>
+          </li>
+          <li class="nav-item">
+            <form method="post" action="{% url 'logout' %}" style="margin-bottom:0;">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-outline-light ms-3" style="font-weight: 600; letter-spacing: 0.6px;">
+                Logout
+              </button>
+            </form>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main content -->
+  <main class="container-main">
+    <div class="card-upload shadow">
+      <h2 class="title">Skin Disease Classifier</h2>
+      <p class="welcome-msg">
+        Hey there! 🌸 What's your current skin care ritual? Upload your photo and let's check it out!
+      </p>
+      <form method="post" enctype="multipart/form-data" action="{% url 'predict' %}">
+        {% csrf_token %}
+        <!-- Custom file upload -->
+        <label for="id_image" class="custom-file-label" id="fileLabel">Choose an image 📸</label>
+        {{ form.image }}
+        <button type="submit" class="btn-predict mt-3">Predict</button>
+      </form>
+    </div>
+  </main>
+
+  <!-- How it works -->
+  <section id="how-it-works" class="container my-5 px-3 px-md-5">
+    <h3 style="color: var(--dark-text); font-weight: 700; letter-spacing: 1.5px; margin-bottom: 1.5rem;">
+      How It Works
+    </h3>
+    <p style="max-width: 700px; margin: auto; font-size: 1.1rem; color: #5c4b7d; text-align:center;">
+      Upload a clear image of your skin concern. Our AI model analyzes it to identify possible skin diseases and offers guidance on next steps. Always consult a dermatologist for medical advice.
+    </p>
+  </section>
+
+  <!-- Tips -->
+  <section id="tips-section" class="container my-5 px-3 px-md-5">
+    <h3 style="color: var(--dark-text); font-weight: 700; letter-spacing: 1.5px; margin-bottom: 1.5rem; text-align:center;">
+      Quick Skincare Tips
+    </h3>
+    <ul style="max-width: 700px; margin: auto; font-size: 1.1rem; color: #5c4b7d; list-style-type: none; padding-left: 0;">
+      <li>🌿 Stay hydrated — drink at least 8 glasses of water a day.</li>
+      <li>🧴 Use sunscreen daily to protect your skin from harmful UV rays.</li>
+      <li>🍎 Eat a balanced diet rich in vitamins and antioxidants.</li>
+      <li>🛏️ Get enough sleep to allow your skin to repair itself.</li>
+      <li>🚫 Avoid smoking and excessive alcohol consumption.</li>
+    </ul>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact-section" class="container my-5 px-3 px-md-5 text-center">
+    <h3 style="color: var(--dark-text); font-weight: 700; letter-spacing: 1.5px; margin-bottom: 1rem;">
+      Contact Us
+    </h3>
+    <p style="font-size: 1.1rem; color: #5c4b7d;">
+      Have questions or want to collaborate? Reach out anytime! <br />
+      <a href="mailto:reddygovardhan731@gmail.com" target="_blank" rel="noopener" style="color: var(--gold); font-weight: 700;">
+        reddygovardhan731@gmail.com
+      </a>
+    </p>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>✨ Remember: Healthy skin is happy skin! Stay hydrated & protect yourself from the sun. ✨</p>
+    <p><span>© 2025 SkinScan</span></p>
+  </footer>
+
+  <!-- Bootstrap JS Bundle (with Popper) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Update label with selected file name and add success color
+    const fileInput = document.getElementById('id_image');
+    const fileLabel = document.getElementById('fileLabel');
+
+    fileInput.addEventListener('change', function () {
+      if (this.files.length > 0) {
+        fileLabel.textContent = this.files[0].name + " ✓";
+        fileLabel.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--mint');
+        fileLabel.style.color = 'white';
+        fileLabel.style.boxShadow = '0 12px 40px rgba(161, 240, 209, 0.8)';
+      } else {
+        fileLabel.textContent = 'Choose an image 📸';
+        fileLabel.style.backgroundColor = '#fff8fb';
+        fileLabel.style.color = getComputedStyle(document.documentElement).getPropertyValue('--mint');
+        fileLabel.style.boxShadow = '0 8px 20px rgba(161, 240, 209, 0.35)';
+      }
+    });
+  </script>
+</body>
+</html>
